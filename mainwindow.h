@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include <QMessageBox>
+#include <QMediaDevices>
+#include <QCameraDevice>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,6 +18,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+private slots:
+    void showCameraInfo();
 
 private:
     Ui::MainWindow *ui;

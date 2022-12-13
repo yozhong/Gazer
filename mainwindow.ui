@@ -15,10 +15,17 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0">
-     <widget class="QCheckBox" name="monitorCheckBox">
+    <item row="1" column="2">
+     <widget class="QLabel" name="label">
       <property name="text">
-       <string>Monitor On/Off</string>
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="3">
+     <widget class="QLabel" name="mainStatusLabel">
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </item>
@@ -29,23 +36,23 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="2">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0" colspan="3">
      <widget class="QGraphicsView" name="imageView"/>
     </item>
-    <item row="3" column="0" colspan="3">
-     <widget class="QListView" name="savedList"/>
-    </item>
-    <item row="4" column="0" colspan="3">
-     <widget class="QLabel" name="mainStatusLabel">
+    <item row="1" column="0">
+     <widget class="QCheckBox" name="monitorCheckBox">
       <property name="text">
-       <string/>
+       <string>Monitor On/Off</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="3">
+     <widget class="QListView" name="savedList">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
      </widget>
     </item>

@@ -18,6 +18,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionExit, SIGNAL(triggered(bool)), QApplication::instance(), SLOT(quit()));
 
     dataLock = new QMutex();
+
+#ifdef GAZER_USE_QT_CAMERA
+    videoWidget = new QVideoWidget();
+    videoWidget->resize(640, 480);
+
+    ui->gridLayout->addWidget(videoWidget, 0, 0, 1, 3);
+
+    QList<QCameraDevice> cameras = QMediaDevices::videoInputs();
+    camera = new QCamera(cameras[1]);
+    camera->stop();
+
+    captureSession = new QMediaCaptureSession();
+    captureSession->setCamera(camera);
+    captureSession->setVideoOutput(videoWidget);
+#endif /* GAZER_USE_QT_CAMERA */
 }
 
 MainWindow::~MainWindow()
@@ -37,6 +52,12 @@ void MainWindow::showCameraInfo()
     QMessageBox::information(this, "Cameras", info);
 }
 
+#ifdef GAZER_USE_QT_CAMERA
+void MainWindow::openCamera()
+{
+    camera->start();
+}
+#else /* GAZER_USE_QT_CAMERA */
 void MainWindow::openCamera()
 {
     int camID = 2;
@@ -51,8 +72,10 @@ void MainWindow::openCamera()
     capturer = new CaptureThread(camID, dataLock);
     connect(capturer, &CaptureThread::frameCaptured, this, &MainWindow::updateFrame);
     capturer->start();
+
     ui->mainStatusLabel->setText(QString("Capturing Camera %1").arg(camID));
 }
+#endif /* GAZER_USE_QT_CAMERA */
 
 void MainWindow::updateFrame(cv::Mat* mat)
 {

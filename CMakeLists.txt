@@ -12,6 +12,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Multimedia)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS MultimediaWidgets)
+
 find_package(OpenCV REQUIRED)
 
 if(OpenCV_FOUND)
@@ -30,6 +32,8 @@ set(PROJECT_SOURCES
         capture_thread.cpp
         capture_thread.h
 )
+
+add_definitions(-DGAZER_USE_QT_CAMERA)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Gazer
@@ -57,6 +61,7 @@ endif()
 target_link_libraries(Gazer PRIVATE ${OpenCV_LIBS})
 target_link_libraries(Gazer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(Gazer PRIVATE Qt${QT_VERSION_MAJOR}::Multimedia)
+target_link_libraries(Gazer PRIVATE Qt${QT_VERSION_MAJOR}::MultimediaWidgets)
 
 set_target_properties(Gazer PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

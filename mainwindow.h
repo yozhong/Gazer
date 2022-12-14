@@ -7,6 +7,9 @@
 #include <QMediaDevices>
 #include <QCameraDevice>
 #include <QMutex>
+#include <QCamera>
+#include <QMediaCaptureSession>
+#include <QVideoWidget>
 
 #include "capture_thread.h"
 
@@ -34,5 +37,10 @@ private:
     // for capture thread
     QMutex *dataLock;
     CaptureThread *capturer;
+#ifdef GAZER_USE_QT_CAMERA
+    QCamera *camera;
+    QMediaCaptureSession *captureSession;
+    QVideoWidget *videoWidget;
+#endif  /* GAZER_USE_QT_CAMERA */
 };
 #endif // MAINWINDOW_H

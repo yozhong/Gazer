@@ -56,6 +56,9 @@ void MainWindow::showCameraInfo()
 void MainWindow::openCamera()
 {
     camera->start();
+
+    ui->mainStatusLabel->setText(QString("Capturing Camera %1")
+        .arg(camera->cameraDevice().description()));
 }
 #else /* GAZER_USE_QT_CAMERA */
 void MainWindow::openCamera()

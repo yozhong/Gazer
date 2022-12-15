@@ -1,5 +1,6 @@
 #ifndef CAPTURE_THREAD_H
 #define CAPTURE_THREAD_H
+
 #include <QString>
 #include <QThread>
 #include <QMutex>
@@ -28,6 +29,12 @@ public:
     };
     void setVideoSavingStatus(VideoSavingStatus status) {videoSavingStatus = status; };
 
+    void setMotionDetectingStatus(bool status) {
+        motionDetectingStatus = status;
+        motionDetected = false;
+        if(videoSavingStatus != STOPPED) videoSavingStatus = STOPPING;
+    };
+
 protected:
     void run() override;
 
@@ -53,6 +60,11 @@ private:
     cv::VideoWriter *videoWriter;
     void startSavingVideo(cv::Mat &firstFrame);
     void stopSavingVideo();
+    // motion analysis
+    void motionDetect(cv::Mat &frame);
+    bool motionDetectingStatus;
+    bool motionDetected;
+    cv::Ptr<cv::BackgroundSubtractorMOG2> segmentor;
 };
 
 #endif // CAPTURE_THREAD_H

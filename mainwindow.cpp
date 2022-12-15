@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionExit, SIGNAL(triggered(bool)), QApplication::instance(), SLOT(quit()));
     connect(ui->actionCalculate_FPS, SIGNAL(triggered(bool)), this, SLOT(calculateFPS()));
     connect(ui->recordButton, SIGNAL(clicked(bool)), this, SLOT(recordingStartStop()));
+    connect(ui->monitorCheckBox, SIGNAL(stateChanged(int)), this, SLOT(updateMonitorStatus(int)));
 
     dataLock = new QMutex();
 
@@ -144,4 +145,18 @@ void MainWindow::appendSavedVideo(QString name)
     QModelIndex index = listModel->indexFromItem(item);
     listModel->setData(index, QPixmap(cover).scaledToHeight(145), Qt::DecorationRole);
     listModel->setData(index, name, Qt::DisplayRole);
+}
+
+void MainWindow::updateMonitorStatus(int status)
+{
+    if(capturer == nullptr) {
+        return;
+    }
+    if(status) {
+        capturer->setMotionDetectingStatus(true);
+        ui->recordButton->setEnabled(false);
+    } else {
+        capturer->setMotionDetectingStatus(false);
+        ui->recordButton->setEnabled(true);
+    }
 }

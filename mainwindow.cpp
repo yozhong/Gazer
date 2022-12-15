@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionCamera_Information, SIGNAL(triggered(bool)), this, SLOT(showCameraInfo()));
     connect(ui->actionOpen_Camera, SIGNAL(triggered(bool)), this, SLOT(openCamera()));
     connect(ui->actionExit, SIGNAL(triggered(bool)), QApplication::instance(), SLOT(quit()));
+    connect(ui->actionCalculate_FPS, SIGNAL(triggered(bool)), this, SLOT(calculateFPS()));
 
     dataLock = new QMutex();
 
@@ -30,8 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
     camera->stop();
 
     captureSession = new QMediaCaptureSession();
-    captureSession->setCamera(camera);
     captureSession->setVideoOutput(videoWidget);
+    captureSession->setCamera(camera);
 #endif /* GAZER_USE_QT_CAMERA */
 }
 
@@ -69,11 +70,13 @@ void MainWindow::openCamera()
         // if a thread is already running, stop it
         capturer->setRunning(false);
         disconnect(capturer, &CaptureThread::frameCaptured, this, &MainWindow::updateFrame);
+        disconnect(capturer, &CaptureThread::fpsChanged, this, &MainWindow::updateFPS);
         connect(capturer, &CaptureThread::finished, capturer, &CaptureThread::deleteLater);
     }
 
     capturer = new CaptureThread(camID, dataLock);
     connect(capturer, &CaptureThread::frameCaptured, this, &MainWindow::updateFrame);
+    connect(capturer, &CaptureThread::fpsChanged, this, &MainWindow::updateFPS);
     capturer->start();
 
     ui->mainStatusLabel->setText(QString("Capturing Camera %1").arg(camID));
@@ -102,3 +105,16 @@ void MainWindow::updateFrame(cv::Mat* mat)
     ui->imageView->resetTransform();
     ui->imageView->setSceneRect(image.rect());
 }
+
+void MainWindow::calculateFPS()
+{
+    if(capturer != nullptr) {
+        capturer->startCalcFPS();
+    }
+}
+
+void MainWindow::updateFPS(float fps)
+{
+    ui->mainStatusLabel->setText(QString("FPS of current camera is %1").arg(fps));
+}
+

@@ -33,7 +33,7 @@ set(PROJECT_SOURCES
         capture_thread.h
 )
 
-add_definitions(-DGAZER_USE_QT_CAMERA)
+#add_definitions(-DGAZER_USE_QT_CAMERA)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Gazer

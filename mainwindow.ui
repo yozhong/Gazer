@@ -73,6 +73,7 @@
     </property>
     <addaction name="actionCamera_Information"/>
     <addaction name="actionOpen_Camera"/>
+    <addaction name="actionCalculate_FPS"/>
     <addaction name="actionExit"/>
    </widget>
    <addaction name="menuFile"/>
@@ -91,6 +92,11 @@
   <action name="actionExit">
    <property name="text">
     <string>E&amp;xit</string>
+   </property>
+  </action>
+  <action name="actionCalculate_FPS">
+   <property name="text">
+    <string>&amp;Calculate FPS</string>
    </property>
   </action>
  </widget>

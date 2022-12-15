@@ -29,6 +29,8 @@ private slots:
     void showCameraInfo();
     void openCamera();
     void updateFrame(cv::Mat*);
+    void calculateFPS();
+    void updateFPS(float);
 
 private:
     Ui::MainWindow *ui;

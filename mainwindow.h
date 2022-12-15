@@ -10,6 +10,7 @@
 #include <QCamera>
 #include <QMediaCaptureSession>
 #include <QVideoWidget>
+#include <QStandardItemModel>
 
 #include "capture_thread.h"
 
@@ -31,6 +32,8 @@ private slots:
     void updateFrame(cv::Mat*);
     void calculateFPS();
     void updateFPS(float);
+    void recordingStartStop();
+    void appendSavedVideo(QString name);
 
 private:
     Ui::MainWindow *ui;
@@ -44,5 +47,8 @@ private:
     QMediaCaptureSession *captureSession;
     QVideoWidget *videoWidget;
 #endif  /* GAZER_USE_QT_CAMERA */
+
+    QStandardItemModel *listModel;
+
 };
 #endif // MAINWINDOW_H

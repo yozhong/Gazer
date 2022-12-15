@@ -7,6 +7,8 @@
 
 #include <opencv2/opencv.hpp>
 
+#include "utilities.h"
+
 class CaptureThread : public QThread
 {
     Q_OBJECT
@@ -18,12 +20,21 @@ public:
     void calculateFPS(cv::VideoCapture &cap);
     void startCalcFPS();
 
+    enum VideoSavingStatus {
+        STARTING,
+        STARTED,
+        STOPPING,
+        STOPPED
+    };
+    void setVideoSavingStatus(VideoSavingStatus status) {videoSavingStatus = status; };
+
 protected:
     void run() override;
 
 signals:
     void frameCaptured(cv::Mat *data);
     void fpsChanged(float fps);
+    void videoSaved(QString name);
 
 private:
     bool running;
@@ -34,6 +45,14 @@ private:
     // FPS calculating
     bool fpsCalculating;
     float fps;
+    // video saving
+    int frameWidth;
+    int frameHeight;
+    VideoSavingStatus videoSavingStatus;
+    QString savedVideoName;
+    cv::VideoWriter *videoWriter;
+    void startSavingVideo(cv::Mat &firstFrame);
+    void stopSavingVideo();
 };
 
 #endif // CAPTURE_THREAD_H

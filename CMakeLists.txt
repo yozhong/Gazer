@@ -25,12 +25,14 @@ if(OpenCV_FOUND)
 endif()
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
-        capture_thread.cpp
-        capture_thread.h
+    main.cpp
+    mainwindow.cpp
+    mainwindow.h
+    mainwindow.ui
+    capture_thread.cpp
+    capture_thread.h
+    utilities.cpp
+    utilities.h
 )
 
 #add_definitions(-DGAZER_USE_QT_CAMERA)

@@ -5,6 +5,12 @@ CaptureThread::CaptureThread(int camera, QMutex *lock):
 {
     fpsCalculating = false;
     fps = 0.0;
+
+    frameWidth = 0;
+    frameHeight = 0;
+    videoSavingStatus = STOPPED;
+    savedVideoName = "";
+    videoWriter = nullptr;
 }
 
 CaptureThread::CaptureThread(QString videoPath, QMutex *lock):
@@ -12,6 +18,12 @@ CaptureThread::CaptureThread(QString videoPath, QMutex *lock):
 {
     fpsCalculating = false;
     fps = 0.0;
+
+    frameWidth = 0;
+    frameHeight = 0;
+    videoSavingStatus = STOPPED;
+    savedVideoName = "";
+    videoWriter = nullptr;
 }
 
 CaptureThread::~CaptureThread() {}
@@ -20,16 +32,30 @@ void CaptureThread::run()
 {
     running = true;
     cv::VideoCapture cap(cameraID);
-    cv::Mat tmp_frame;
+    cv::Mat tmpFrame;
+
+    frameWidth = cap.get(cv::CAP_PROP_FRAME_WIDTH);
+    frameHeight = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
 
     while(running) {
-        cap >> tmp_frame;
-        if (tmp_frame.empty()) {
+        cap >> tmpFrame;
+        if (tmpFrame.empty()) {
             break;
         }
-        cvtColor(tmp_frame, tmp_frame, cv::COLOR_BGR2RGB);
+
+        if(videoSavingStatus == STARTING) {
+            startSavingVideo(tmpFrame);
+        }
+        if(videoSavingStatus == STARTED) {
+            videoWriter->write(tmpFrame);
+        }
+        if(videoSavingStatus == STOPPING) {
+            stopSavingVideo();
+        }
+
+        cvtColor(tmpFrame, tmpFrame, cv::COLOR_BGR2RGB);
         dataLock->lock();
-        frame = tmp_frame;
+        frame = tmpFrame;
         dataLock->unlock();
         emit frameCaptured(&frame);
 
@@ -63,4 +89,29 @@ void CaptureThread::calculateFPS(cv::VideoCapture &cap)
 void CaptureThread::startCalcFPS()
 {
     fpsCalculating = true;
+}
+
+void CaptureThread::startSavingVideo(cv::Mat &firstFrame)
+{
+    savedVideoName = Utilities::newSavedVideoName();
+    QString cover = Utilities::getSavedVideoPath(savedVideoName, "jpg");
+    //save the first frame of the video to an image
+    cv::imwrite(cover.toStdString(), firstFrame);
+
+    videoWriter = new cv::VideoWriter(
+        Utilities::getSavedVideoPath(savedVideoName, "avi").toStdString(),
+        cv::VideoWriter::fourcc('M','J','P','G'),
+        fps ? fps : 30,
+        cv::Size(frameWidth, frameHeight));
+
+    videoSavingStatus = STARTED;
+}
+
+void CaptureThread::stopSavingVideo()
+{
+    videoSavingStatus = STOPPED;
+    videoWriter->release();
+    delete videoWriter;
+    videoWriter = nullptr;
+    emit videoSaved(savedVideoName);
 }

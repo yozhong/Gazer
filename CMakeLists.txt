@@ -13,6 +13,7 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Multimedia)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS MultimediaWidgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Concurrent)
 
 find_package(OpenCV REQUIRED)
 
@@ -64,6 +65,7 @@ target_link_libraries(Gazer PRIVATE ${OpenCV_LIBS})
 target_link_libraries(Gazer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(Gazer PRIVATE Qt${QT_VERSION_MAJOR}::Multimedia)
 target_link_libraries(Gazer PRIVATE Qt${QT_VERSION_MAJOR}::MultimediaWidgets)
+target_link_libraries(Gazer PRIVATE Qt${QT_VERSION_MAJOR}::Concurrent)
 
 set_target_properties(Gazer PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

@@ -149,6 +149,7 @@ void CaptureThread::motionDetect(cv::Mat &frame)
         motionDetected = true;
         setVideoSavingStatus(STARTING);
         qDebug() << "new motion detected, should send a notification.";
+        QtConcurrent::run(Utilities::notifyMobile, cameraID);
     } else if (motionDetected && !hasMotion) {
         motionDetected = false;
         setVideoSavingStatus(STOPPING);

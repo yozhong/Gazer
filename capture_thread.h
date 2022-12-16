@@ -5,6 +5,7 @@
 #include <QThread>
 #include <QMutex>
 #include <QTime>
+#include <QtConcurrent>
 
 #include <opencv2/opencv.hpp>
 
